@@ -1,7 +1,8 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
+import { Loader2 } from 'lucide-react';
 
-export const Button = React.forwardRef(({ className, variant = 'primary', size = 'md', children, ...props }, ref) => {
+export const Button = React.forwardRef(({ className, variant = 'primary', size = 'md', isLoading = false, children, ...props }, ref) => {
   const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900 disabled:opacity-50 disabled:pointer-events-none';
   const variants = {
     primary: 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-md shadow-indigo-500/30 hover:shadow-lg hover:shadow-indigo-500/40 hover:-translate-y-0.5 focus:ring-indigo-500',
@@ -21,8 +22,10 @@ export const Button = React.forwardRef(({ className, variant = 'primary', size =
     <button
       ref={ref}
       className={cn(baseStyles, variants[variant], sizes[size], className)}
+      disabled={isLoading || props.disabled}
       {...props}
     >
+      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
       {children}
     </button>
   );
