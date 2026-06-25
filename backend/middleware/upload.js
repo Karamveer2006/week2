@@ -2,10 +2,12 @@ const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('../config/cloudinary');
 
+const os = require('os');
+
 // Storage for Excel/CSV (local)
 const diskStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, os.tmpdir());
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
