@@ -49,8 +49,10 @@ async function updateSchema() {
             class_id INT NOT NULL,
             title VARCHAR(255) NOT NULL,
             description TEXT,
+            header_image TEXT,
+            fields JSON NOT NULL,
             due_date DATETIME NOT NULL,
-            form_schema JSON NOT NULL,
+            is_active BOOLEAN DEFAULT TRUE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (class_id) REFERENCES Classes(id) ON DELETE CASCADE
         );
