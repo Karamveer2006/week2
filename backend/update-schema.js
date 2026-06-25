@@ -44,6 +44,18 @@ async function updateSchema() {
     `);
 
     await connection.query(`
+        CREATE TABLE IF NOT EXISTS Notes (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            class_id INT NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            description TEXT,
+            file_url TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (class_id) REFERENCES Classes(id) ON DELETE CASCADE
+        );
+    `);
+
+    await connection.query(`
         CREATE TABLE IF NOT EXISTS FormAssignments (
             id INT AUTO_INCREMENT PRIMARY KEY,
             class_id INT NOT NULL,
