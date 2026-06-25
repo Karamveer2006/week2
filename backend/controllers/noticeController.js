@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { sendNotificationToUser } = require('../services/notificationService');
 
 const getNotices = async (req, res) => {
     try {
@@ -37,10 +38,34 @@ const createNotice = async (req, res) => {
     const teacherId = req.user.id;
 
     try {
-        await db.query(
+        const [result] = await db.query(
             'INSERT INTO Notices (created_by, title, content) VALUES (?, ?, ?)',
             [teacherId, title, content]
         );
+        const noticeId = result.insertId;
+
+        // Fetch all students of this teacher to notify them
+        const [students] = await db.query(`
+            SELECT DISTINCT u.id 
+            FROM Users u
+            JOIN Class_Students cs ON u.id = cs.student_id
+            JOIN Classes c ON cs.class_id = c.id
+            WHERE c.teacher_id = ?
+        `, [teacherId]);
+
+        // Send notifications
+        const notificationPromises = students.map(student => 
+            sendNotificationToUser(
+                student.id,
+                `New Notice: ${title}`,
+                content.substring(0, 50) + (content.length > 50 ? '...' : ''),
+                'notice',
+                noticeId
+            )
+        );
+
+        await Promise.allSettled(notificationPromises);
+
         res.json({ message: 'Notice created successfully' });
     } catch (error) {
         console.error(error);
