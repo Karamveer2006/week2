@@ -86,7 +86,7 @@ export default function FormListTeacher() {
                   <div>
                     <p className="font-bold text-gray-900 dark:text-white">{s.name}</p>
                     <p className="text-sm text-gray-500">Roll No: {s.roll_number}</p>
-                    <p className="text-xs text-gray-400 mt-1">Submitted: {new Date(s.created_at).toLocaleString()}</p>
+                    <p className="text-xs text-gray-400 mt-1">Submitted: {new Date(s.submitted_at).toLocaleString()}</p>
                   </div>
                   <div className="text-right">
                     {s.score_percentage !== null ? (
