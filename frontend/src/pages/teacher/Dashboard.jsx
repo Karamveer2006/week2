@@ -53,7 +53,7 @@ export default function TeacherDashboard() {
       setIsNoticeOpen(false);
       setNoticeTitle('');
       setNoticeContent('');
-      fetchNotices();
+      fetchData();
     } catch (err) {
       console.error(err);
     }
