@@ -96,10 +96,15 @@ const submitAssignment = async (req, res) => {
 
         if (assignmentData.length > 0) {
             const { title, teacher_id, class_name } = assignmentData[0];
+            
+            // Fetch student name since it's not in req.user
+            const [studentData] = await db.query('SELECT name FROM Users WHERE id = ?', [studentId]);
+            const studentName = studentData.length > 0 ? studentData[0].name : 'A student';
+
             await notificationService.createNotification(
                 teacher_id,
                 'New Assignment Submission',
-                `${req.user.name} submitted the assignment "${title}" for ${class_name}.`,
+                `${studentName} submitted the assignment "${title}" for ${class_name}.`,
                 'submission',
                 assignment_id
             );

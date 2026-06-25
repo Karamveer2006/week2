@@ -142,19 +142,24 @@ const submitFormAssignment = async (req, res) => {
 
         // Notify teacher
         const notificationService = require('../services/notificationService');
-        const [formData] = await db.query(`
+        const [assignmentData] = await db.query(`
             SELECT f.title, c.teacher_id, c.class_name 
             FROM FormAssignments f 
             JOIN Classes c ON f.class_id = c.id 
             WHERE f.id = ?
         `, [id]);
 
-        if (formData.length > 0) {
-            const { title, teacher_id, class_name } = formData[0];
+        if (assignmentData.length > 0) {
+            const { title, teacher_id, class_name } = assignmentData[0];
+            
+            // Fetch student name since it's not in req.user
+            const [studentData] = await db.query('SELECT name FROM Users WHERE id = ?', [studentId]);
+            const studentName = studentData.length > 0 ? studentData[0].name : 'A student';
+
             await notificationService.createNotification(
                 teacher_id,
                 'New Form Submission',
-                `${req.user.name} submitted the form "${title}" for ${class_name}.`,
+                `${studentName} submitted the form "${title}" for ${class_name}.`,
                 'submission',
                 id
             );
