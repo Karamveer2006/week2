@@ -190,11 +190,11 @@ const getFormSubmissions = async (req, res) => {
         }
 
         const [submissions] = await db.query(`
-            SELECT s.id, s.score_percentage, s.created_at, u.name, u.roll_number
+            SELECT s.id, s.score_percentage, s.submitted_at, u.name, u.roll_number
             FROM FormSubmissions s
             JOIN Users u ON s.student_id = u.id
             WHERE s.form_id = ?
-            ORDER BY s.created_at DESC
+            ORDER BY s.submitted_at DESC
         `, [id]);
 
         res.json(submissions);
